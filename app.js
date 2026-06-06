@@ -315,31 +315,41 @@ function renderApp() {
 
 // Balance Card Updater
 function updateBalances() {
-    const focusYear = state.currentDate.getFullYear();
-    const focusMonth = state.currentDate.getMonth();
+    let cumulativeIncome = 0;
+    let cumulativeExpense = 0;
     
-    // Filter transactions for this month
-    const thisMonthTrans = state.transactions.filter(t => {
-        const d = new Date(t.date);
-        return d.getFullYear() === focusYear && d.getMonth() === focusMonth;
-    });
-    
-    let totalIncome = 0;
-    let totalExpense = 0;
-    
-    thisMonthTrans.forEach(t => {
+    // Calculate total balance from all transactions
+    state.transactions.forEach(t => {
         if (t.type === "income") {
-            totalIncome += t.amount;
+            cumulativeIncome += t.amount;
         } else {
-            totalExpense += t.amount;
+            cumulativeExpense += t.amount;
         }
     });
     
-    const balance = totalIncome - totalExpense;
+    const totalBalance = cumulativeIncome - cumulativeExpense;
     
-    document.getElementById("total-balance").textContent = `${balance.toLocaleString()}원`;
-    document.getElementById("header-income").textContent = `+${totalIncome.toLocaleString()}원`;
-    document.getElementById("header-expense").textContent = `-${totalExpense.toLocaleString()}원`;
+    // Calculate month-specific totals
+    const focusYear = state.currentDate.getFullYear();
+    const focusMonth = state.currentDate.getMonth();
+    
+    let monthlyIncome = 0;
+    let monthlyExpense = 0;
+    
+    state.transactions.forEach(t => {
+        const d = new Date(t.date);
+        if (d.getFullYear() === focusYear && d.getMonth() === focusMonth) {
+            if (t.type === "income") {
+                monthlyIncome += t.amount;
+            } else {
+                monthlyExpense += t.amount;
+            }
+        }
+    });
+    
+    document.getElementById("total-balance").textContent = `${totalBalance.toLocaleString()}원`;
+    document.getElementById("header-income").textContent = `+${monthlyIncome.toLocaleString()}원`;
+    document.getElementById("header-expense").textContent = `-${monthlyExpense.toLocaleString()}원`;
 }
 
 // Sort Helper

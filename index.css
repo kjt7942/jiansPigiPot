@@ -1088,7 +1088,7 @@ body.light-theme .bg-glow {
 }
 
 .cal-day-cell {
-    aspect-ratio: 1;
+    height: 68px; /* Fixed height to prevent cell alignment break when text overflows */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
