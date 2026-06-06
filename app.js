@@ -266,6 +266,7 @@ function initDOMEvents() {
     
     // Calculator Keypad Events
     document.querySelectorAll(".calc-key").forEach(key => {
+        if (key.id === "calc-apply-btn") return;
         key.addEventListener("click", () => {
             const val = key.getAttribute("data-val");
             const action = key.getAttribute("data-action");
