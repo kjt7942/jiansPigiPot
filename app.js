@@ -1171,7 +1171,7 @@ function applyCalculatorValue() {
             const finalVal = Function(`"use strict"; return (${sanitizedExp})`)();
             
             if (isFinite(finalVal)) {
-                calcState.result = String(Math.round(finalVal));
+                calcState.result = String(Number(finalVal.toFixed(4)));
                 calcState.expression = "";
                 calcState.isReset = true;
                 updateCalculatorDisplay();
@@ -1190,7 +1190,7 @@ function applyCalculatorValue() {
     
     // Apply final value to form if target input is defined
     if (calcState.targetInput) {
-        const numericVal = parseInt(calcState.result, 10);
+        const numericVal = Math.round(parseFloat(calcState.result));
         if (!isNaN(numericVal) && numericVal > 0) {
             calcState.targetInput.value = numericVal;
         }
