@@ -227,13 +227,6 @@ function initDOMEvents() {
             document.getElementById("trans-ampm").value = btn.getAttribute("data-value");
         });
     });
-
-    // Dark/Light Theme Header Button Toggle
-    themeBtn.addEventListener("click", () => {
-        const isLight = document.body.classList.contains("light-theme");
-        setTheme(isLight ? "dark" : "light");
-    });
-
     // Settings Modal Open/Close Controls
     document.getElementById("settings-toggle-btn").addEventListener("click", () => {
         document.getElementById("settings-modal").classList.add("open");
@@ -1177,9 +1170,8 @@ function applyCalculatorValue() {
 // Global Theme Changer
 function setTheme(theme) {
     const themeBtn = document.getElementById("theme-toggle-btn");
-    if (!themeBtn) return;
-    const sunIcon = themeBtn.querySelector(".sun-icon");
-    const moonIcon = themeBtn.querySelector(".moon-icon");
+    const sunIcon = themeBtn ? themeBtn.querySelector(".sun-icon") : null;
+    const moonIcon = themeBtn ? themeBtn.querySelector(".moon-icon") : null;
     const darkCardBtn = document.getElementById("settings-theme-dark");
     const lightCardBtn = document.getElementById("settings-theme-light");
 
