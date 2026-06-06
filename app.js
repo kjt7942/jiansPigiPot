@@ -67,6 +67,11 @@ const CATEGORY_COLORS = {
 // Initialize App
 window.addEventListener("DOMContentLoaded", () => {
     loadTransactions();
+    
+    // Initialize Theme
+    const savedTheme = localStorage.getItem("jjan_pocket_money_theme") || "dark";
+    setTheme(savedTheme);
+
     initDOMEvents();
     
     // Set default select date to today
@@ -223,28 +228,37 @@ function initDOMEvents() {
         });
     });
 
-    // Dark/Light Theme Switching
-    const themeBtn = document.getElementById("theme-toggle-btn");
-    const sunIcon = themeBtn.querySelector(".sun-icon");
-    const moonIcon = themeBtn.querySelector(".moon-icon");
-
-    // Load theme from localStorage
-    const savedTheme = localStorage.getItem("jjan_pocket_money_theme") || "dark";
-    if (savedTheme === "light") {
-        document.body.classList.add("light-theme");
-        sunIcon.classList.add("hidden");
-        moonIcon.classList.remove("hidden");
-    }
-
+    // Dark/Light Theme Header Button Toggle
     themeBtn.addEventListener("click", () => {
-        const isLight = document.body.classList.toggle("light-theme");
-        localStorage.setItem("jjan_pocket_money_theme", isLight ? "light" : "dark");
-        if (isLight) {
-            sunIcon.classList.add("hidden");
-            moonIcon.classList.remove("hidden");
-        } else {
-            sunIcon.classList.remove("hidden");
-            moonIcon.classList.add("hidden");
+        const isLight = document.body.classList.contains("light-theme");
+        setTheme(isLight ? "dark" : "light");
+    });
+
+    // Settings Modal Open/Close Controls
+    document.getElementById("settings-toggle-btn").addEventListener("click", () => {
+        document.getElementById("settings-modal").classList.add("open");
+    });
+    document.getElementById("close-settings-btn").addEventListener("click", () => {
+        document.getElementById("settings-modal").classList.remove("open");
+    });
+
+    // Theme selector inside settings
+    document.getElementById("settings-theme-dark").addEventListener("click", () => setTheme("dark"));
+    document.getElementById("settings-theme-light").addEventListener("click", () => setTheme("light"));
+
+    // Reset Data with Double Confirmation
+    document.getElementById("reset-data-btn").addEventListener("click", () => {
+        const confirm1 = confirm("⚠️ 정말로 모든 가계부 데이터를 초기화하시겠습니까?\n이 작업은 되돌릴 수 없으며, 모든 수입/지출 내역이 삭제됩니다.");
+        if (confirm1) {
+            const confirm2 = confirm("⚠️ [최종 확인] 데이터를 삭제하면 완전히 소실됩니다. 계속해서 초기화하시겠습니까?");
+            if (confirm2) {
+                localStorage.removeItem("jjan_pocket_money_transactions");
+                state.transactions = [];
+                saveTransactions();
+                document.getElementById("settings-modal").classList.remove("open");
+                renderApp();
+                alert("가계부가 초기화되었습니다.");
+            }
         }
     });
 
@@ -1158,4 +1172,30 @@ function applyCalculatorValue() {
     }
     
     closeCalculator();
+}
+
+// Global Theme Changer
+function setTheme(theme) {
+    const themeBtn = document.getElementById("theme-toggle-btn");
+    if (!themeBtn) return;
+    const sunIcon = themeBtn.querySelector(".sun-icon");
+    const moonIcon = themeBtn.querySelector(".moon-icon");
+    const darkCardBtn = document.getElementById("settings-theme-dark");
+    const lightCardBtn = document.getElementById("settings-theme-light");
+
+    localStorage.setItem("jjan_pocket_money_theme", theme);
+
+    if (theme === "light") {
+        document.body.classList.add("light-theme");
+        if (sunIcon) sunIcon.classList.add("hidden");
+        if (moonIcon) moonIcon.classList.remove("hidden");
+        if (lightCardBtn) lightCardBtn.classList.add("active");
+        if (darkCardBtn) darkCardBtn.classList.remove("active");
+    } else {
+        document.body.classList.remove("light-theme");
+        if (sunIcon) sunIcon.classList.remove("hidden");
+        if (moonIcon) moonIcon.classList.add("hidden");
+        if (lightCardBtn) lightCardBtn.classList.remove("active");
+        if (darkCardBtn) darkCardBtn.classList.add("active");
+    }
 }
