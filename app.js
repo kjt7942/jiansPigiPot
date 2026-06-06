@@ -591,9 +591,21 @@ function renderCalendar() {
             else expSum += t.amount;
         });
         
+        const formatMini = (val) => {
+            if (val >= 10000) {
+                const v = val / 10000;
+                return v % 1 === 0 ? v.toFixed(0) + '만' : v.toFixed(1) + '만';
+            } else if (val >= 1000) {
+                const v = val / 1000;
+                return v % 1 === 0 ? v.toFixed(0) + '천' : v.toFixed(1) + '천';
+            } else {
+                return val.toString();
+            }
+        };
+        
         let sumHTML = "";
-        if (incSum > 0) sumHTML += `<span class="cal-mini-inc">+${incSum >= 10000 ? (incSum/10000).toFixed(1)+'만' : incSum.toLocaleString()}</span>`;
-        if (expSum > 0) sumHTML += `<span class="cal-mini-exp">-${expSum >= 10000 ? (expSum/10000).toFixed(1)+'만' : expSum.toLocaleString()}</span>`;
+        if (incSum > 0) sumHTML += `<span class="cal-mini-inc">+${formatMini(incSum)}</span>`;
+        if (expSum > 0) sumHTML += `<span class="cal-mini-exp">-${formatMini(expSum)}</span>`;
         
         cell.innerHTML = `
             <span class="cal-day-num">${day}</span>

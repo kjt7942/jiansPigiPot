@@ -1936,3 +1936,23 @@ body.light-theme .danger-zone {
         display: none;
     }
 }
+
+/* Calendar optimization for smaller mobile devices */
+@media (max-width: 480px) {
+    .calendar-grid-container {
+        padding: 6px;
+    }
+    .calendar-days {
+        gap: 2px;
+    }
+    .cal-day-cell {
+        height: 60px;
+        padding: 4px 2px;
+    }
+    .cal-day-num {
+        font-size: 0.75rem;
+    }
+    .cal-mini-inc, .cal-mini-exp {
+        font-size: 0.58rem;
+    }
+}
