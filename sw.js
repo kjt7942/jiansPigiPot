@@ -1,4 +1,4 @@
-const CACHE_NAME = "jjan-pocket-money-v3";
+const CACHE_NAME = "jjan-pocket-money-v5";
 const ASSETS = [
   "./",
   "./index.html",
@@ -35,17 +35,22 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Fetch Event (Cache-first falling back to network)
+// Fetch Event (Network-first falling back to cache)
 self.addEventListener("fetch", (e) => {
   e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(e.request).catch(() => {
-        // Return fallback if resource is offline and not cached
-        console.warn("Resource offline & not cached:", e.request.url);
-      });
-    })
+    fetch(e.request)
+      .then((response) => {
+        // Update cache with the new fetched version
+        if (response && response.status === 200 && response.type === 'basic') {
+          const responseCopy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseCopy);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        return caches.match(e.request);
+      })
   );
 });

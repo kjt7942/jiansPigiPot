@@ -1118,7 +1118,15 @@ function handleCalculatorInput(val, action) {
         if (operators.includes(val)) {
             // Operator selected
             if (calcState.isReset) {
-                calcState.expression = calcState.result + " " + val + " ";
+                if (calcState.expression !== "") {
+                    const parts = calcState.expression.trim().split(" ");
+                    if (parts.length > 0) {
+                        parts[parts.length - 1] = val;
+                        calcState.expression = parts.join(" ") + " ";
+                    }
+                } else {
+                    calcState.expression = calcState.result + " " + val + " ";
+                }
             } else {
                 calcState.expression += calcState.result + " " + val + " ";
             }
