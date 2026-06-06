@@ -1095,6 +1095,15 @@ function closeCalculator() {
 function updateCalculatorDisplay() {
     document.getElementById("calc-exp-display").textContent = calcState.expression;
     document.getElementById("calc-val-display").textContent = calcState.result;
+
+    const applyBtn = document.getElementById("calc-apply-btn");
+    if (applyBtn) {
+        if (calcState.expression) {
+            applyBtn.textContent = "=";
+        } else {
+            applyBtn.textContent = "입력";
+        }
+    }
 }
 
 function handleCalculatorInput(val, action) {
@@ -1165,6 +1174,8 @@ function applyCalculatorValue() {
                 calcState.result = String(Math.round(finalVal));
                 calcState.expression = "";
                 calcState.isReset = true;
+                updateCalculatorDisplay();
+                return; // Keep open so user can see the result, change button to "입력"
             } else {
                 calcState.result = "오류";
                 updateCalculatorDisplay();

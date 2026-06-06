@@ -1,4 +1,4 @@
-const CACHE_NAME = "jjan-pocket-money-v5";
+const CACHE_NAME = "jjan-pocket-money-v6";
 const ASSETS = [
   "./",
   "./index.html",
